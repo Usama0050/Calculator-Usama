@@ -1,12 +1,17 @@
 import streamlit as st
 import emoji
 
-# Initialize expression state
+# Initialize session state
 if 'expression' not in st.session_state:
     st.session_state['expression'] = ""
+if 'just_evaluated' not in st.session_state:
+    st.session_state['just_evaluated'] = False
 
 # Define functions
 def update_display(value):
+    if st.session_state['just_evaluated']:
+        st.session_state['expression'] = ""
+        st.session_state['just_evaluated'] = False
     st.session_state['expression'] += value
 
 def calculate_result():
@@ -14,6 +19,7 @@ def calculate_result():
         st.session_state['expression'] = str(eval(st.session_state['expression']))
     except Exception:
         st.session_state['expression'] = "Error"
+    st.session_state['just_evaluated'] = True
 
 def set_operation(op):
     ops = {
@@ -22,13 +28,16 @@ def set_operation(op):
         "Multiplication": "*",
         "Division": "/"
     }
-    st.session_state['expression'] += ops.get(op, "")
+    if st.session_state['expression'] and st.session_state['expression'][-1] not in "+-*/":
+        st.session_state['expression'] += ops.get(op, "")
+    st.session_state['just_evaluated'] = False
 
 def clear_input():
     st.session_state['expression'] = ""
+    st.session_state['just_evaluated'] = False
 
 # Title
-st.title("Calculator_Assignment By (Usama)")
+st.title("Calculator (Usama)")
 
 # Hidden text input to allow keyboard typing + Enter
 user_input = st.text_input(
@@ -38,9 +47,13 @@ user_input = st.text_input(
     label_visibility="collapsed"
 )
 
-# If the user pressed Enter (i.e., user_input has changed), evaluate it
+# If the user pressed Enter (expression changed), evaluate it
 if user_input != st.session_state['expression']:
-    st.session_state['expression'] = user_input
+    if st.session_state['just_evaluated']:
+        st.session_state['expression'] = user_input  # fresh input overwrites result
+        st.session_state['just_evaluated'] = False
+    else:
+        st.session_state['expression'] = user_input
     calculate_result()
 
 # Display current expression or result
@@ -58,7 +71,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Layout for buttons
+# Button layout
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
@@ -84,4 +97,4 @@ with col4:
     st.button(emoji.emojize(":heavy_minus_sign:"), on_click=set_operation, args=("Subtraction",))
     st.button(emoji.emojize(":heavy_multiplication_x:"), on_click=set_operation, args=("Multiplication",))
     st.button(emoji.emojize(":heavy_division_sign:"), on_click=set_operation, args=("Division",))
-    st.button("C", on_click=clear_input)
+    st.button("AC", on_click=clear_input)
