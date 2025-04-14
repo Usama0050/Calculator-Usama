@@ -37,7 +37,7 @@ def clear_input():
     st.session_state['just_evaluated'] = False
 
 # Title
-st.title("Calculator (Usama)")
+st.title("Calculator")
 
 # Hidden text input to allow keyboard typing + Enter
 user_input = st.text_input(
