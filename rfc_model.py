@@ -1,10 +1,11 @@
 import pickle
+import joblib
 import streamlit as st
 import numpy as np
 
-with open('model_rfc.pkl', 'rb') as file:
-    model = pickle.load(file)
-
+#with open('model_rfc.pkl', 'rb') as file:
+    model = joblib.load('model.pkl')
+    
 # Streamlit app
 st.title("💧 Water Potability Predictor")
 st.markdown("Enter the water quality parameters below:")
