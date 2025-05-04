@@ -3,7 +3,7 @@ import joblib
 import streamlit as st
 import numpy as np
 
-#with open('model_rfc.pkl', 'rb') as file:
+with open('model_rfc.pkl', 'rb') as file:
     model = joblib.load('model.pkl')
     
 # Streamlit app
