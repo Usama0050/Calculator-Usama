@@ -7,7 +7,7 @@ import numpy as np
     model = joblib.load('model.pkl')
     
 # Streamlit app
-st.title("💧 Water Potability Predictor")
+st.title("Water Potability Predictor")
 st.markdown("Enter the water quality parameters below:")
 
 # Input fields for user
